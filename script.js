@@ -31,19 +31,35 @@
 
 11) Добавить папку с третьим уроком в свой репозиторий на GitHub
 */
+let money = 25000,
+   income = 'премия',
+   addExperienses = 'интернет, проезд, сигареты',
+   deposit = true,
+   mission = 1000000,
+   period = 12;
 
-let money = +prompt('Ваш месячный доход?'),
-   addExperienses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую'),
-   deposit = confirm('Есть ли у вас депозит в банке?'),
-   expenses1 = prompt('Введите обязательную статью расходов 1?'),
+console.log('typeof money: ', typeof money);
+console.log('typeof income: ', typeof income);
+console.log('typeof deposit: ', typeof deposit);
+console.log('addExperienses.length: ', addExperienses.length);
+console.log(`Период равен ${period} месяцев`);
+console.log(`Цель заработать ${mission} рублей`);
+
+money = +prompt('Ваш месячный доход?');
+addExperienses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую');
+if (addExperienses !== null) {
+   addExperienses = addExperienses.split(', ');
+   console.log('addExperienses: ', addExperienses);
+}
+deposit = confirm('Есть ли у вас депозит в банке?');
+let expenses1 = prompt('Введите обязательную статью расходов 1?'),
    amount1 = +prompt('Во сколько это обойдется?'),
    expenses2 = prompt('Введите обязательную статью расходов 2?'),
-   amount2 = +prompt('Во сколько это обойдется?'),
-   mission = 1000000,
-   budgetMonth = money - (amount1 + amount2),
+   amount2 = +prompt('Во сколько это обойдется?');
+let budgetMonth = money - (amount1 + amount2),
    result = Math.round(mission / budgetMonth),
    budgetDay = Math.floor(budgetMonth / 31),
-   ending; 
+   ending;
 
 console.log('budgetMonth: ', budgetMonth);
 console.log('budgetDay: ', budgetDay);
