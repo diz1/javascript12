@@ -5,7 +5,7 @@ let isNumber = n => {
 
 const start = () => {
 	do {
-		money = +prompt('Ваш месячный доход?');
+		money = prompt('Ваш месячный доход?');
 	} while (!isNumber(money));
 };
 
@@ -17,19 +17,39 @@ let appData = {
 	expenses: {},
 	addExpenses: [],
 	deposit: false,
+	percentDeposit: 0,
+	moneyDeposit: 0,
 	mission: 1000000,
 	period: 12,
-	budget: money,
+	budget: +money,
 	budgetDay: 0,
 	budgetMonth: 0,
 	expensesMonth: 0,
 	asking: () => {
+
+		if (confirm('Есть ли у вас дополнительный источник заработка?')) {
+			let itemIncome, cashIncome;
+			do {
+				itemIncome = prompt(`Какой у вас дополнительный заработок?
+Примечание: введите более 3-х символов`);
+			} while (itemIncome === null || itemIncome.length < 3);
+			do {
+				cashIncome = prompt('Сколько в месяц вы на этом зарабатываете?');
+			} while (!isNumber(cashIncome));
+
+			appData.income[itemIncome] = +cashIncome;
+		}
+
 		let	addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую');
 		addExpenses = addExpenses.toLowerCase().split(',');
 		addExpenses.forEach(item => appData.addExpenses.push(item.trim()));
 		appData.deposit = confirm('Есть ли у вас депозит в банке?');
 		for (let i = 0; i < 2; i++) {
-			let amount, expenses = prompt(`Введите обязательную статью расходов ${i + 1}?`);
+			let amount, expenses;
+			do {
+				expenses = prompt(`Введите обязательную статью расходов ${i + 1}?
+Примечание: введите более 3-х символов`);
+			} while (expenses === null || expenses.length < 3);
 			do {
 				amount = prompt('Во сколько это обойдется?');
 			} while (!isNumber(amount));
@@ -37,12 +57,9 @@ let appData = {
 		}
 	},
 	getExpensesMonth: () => {
-		let sum = 0;
 		for (let key in appData.expenses) {
-			sum += appData.expenses[key];
+			appData.expensesMonth += +appData.expenses[key];
 		}
-		appData.expensesMonth = sum;
-		return appData.expensesMonth;
 	},
 	getBudget: () => {
 		appData.budgetMonth = appData.budget - appData.expensesMonth;
@@ -86,24 +103,41 @@ let appData = {
 	getResult: () => {
 		if (appData.getTargetMonth() > 0) {
 			return (`Цель в ${appData.mission} руб. будет достигнута через ${appData.getTargetMonth()} месяц${appData.getEnding()}`);
-		} else if (appData.getTargetMonth()) {
+		} else {
 			return (`Цель не будет достигрута`);
 		}
+	},
+	getInfoDeposit: () => {
+		if (appData.deposit) {
+			do {
+				appData.percentDeposit = prompt('Какой годовой процент?');
+			} while (!isNumber(appData.percentDeposit));
+			do {
+				appData.moneyDeposit = prompt('Какая сумма заложена?');
+			} while (!isNumber(appData.moneyDeposit));
+		}
+	},
+	calcSavedMoney: () => {
+		return appData.budgetMonth * appData.period;
 	}
 };
 appData.asking();
 appData.getExpensesMonth();
 appData.getBudget();
 appData.getTargetMonth();
+appData.getInfoDeposit();
 
-console.log('Возможные расходы: ', appData.addExpenses);
-console.log('Статиь расходов: ', appData.expenses);
+console.log('Возможные расходы: ', appData.addExpenses.map(item => `${item[0].toUpperCase()}${item.slice(1)}`).join(', '));
+console.log('Статьи расходов: ', appData.expenses);
 console.log('Расходы за месяц: ', appData.expensesMonth);
 console.log('Оставшийся бюджет на месяц: ', appData.budgetMonth);
 console.log('Бюджет на день: ', appData.budgetDay);
+console.log(`Ваш депозит ${appData.moneyDeposit} под ${appData.percentDeposit}% годовых`);
+console.log(`Накопите ${Math.ceil(appData.calcSavedMoney())} за ${appData.period} месяц${appData.getEnding()}`);
 console.log(appData.getStatusIncome());
 console.log(appData.getResult());
-console.log('Наша программа включает в себя данные:');
-for (let key in appData) {
-	console.log(key + ': ', appData[key]);
-}
+// console.log('Наша программа включает в себя данные:');
+//
+// for (let key in appData) {
+// 	console.log(key + ': ', appData[key]);
+// }
