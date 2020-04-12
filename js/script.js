@@ -58,6 +58,10 @@ let appData = {
 
 		appData.getResult();
 	},
+	getPeriodAmount: () => {
+		let periodAmount = document. querySelector('.period-amount');
+		periodAmount.textContent = periodSelect.value;
+	},
 	addExpensesBlock: () => {
 		let cloneExpensesItem = expensesItems[0].cloneNode(true);
 		expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesPlus);
@@ -71,7 +75,7 @@ let appData = {
 		incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomePlus);
 		incomeItems = document.querySelectorAll('.income-items');
 		if (incomeItems.length === 3) {
-			expensesPlus.style.display = 'none';
+			incomePlus.style.display = 'none';
 		}
 	},
 	getExpenses: () => {
@@ -165,9 +169,15 @@ let appData = {
 		additionalIncomeValue.value = appData.addIncome.join(', ');
 		targetMonthValue.value = appData.getTargetMonth();
 		incomePeriodValue.value = appData.calcSavedMoney();
+		periodSelect.addEventListener('input', () => {
+			incomePeriodValue.value = appData.calcSavedMoney();
+		});
+
+
 
 		// if (appData.getTargetMonth() > 0) {
-		// 	return (`Цель в ${appData.mission} руб. будет достигнута через ${appData.getTargetMonth()} месяц${appData.getEnding()}`);
+		// 	return (`Цель в ${appData.mission} руб. будет достигнута через ${appData.getTargetMonth()}
+		// 	месяц${appData.getEnding()}`);
 		// } else {
 		// 	return (`Цель не будет достигрута`);
 		// }
@@ -184,8 +194,20 @@ let appData = {
 	},
 	calcSavedMoney: () => {
 		return appData.budgetMonth * periodSelect.value;
+	},
+	checkSalaryAmount: () => {
+		start.setAttribute('disabled', 'disabled');
+		salaryAmount.addEventListener('input', () => {
+			if (salaryAmount.value !== '') {
+				start.removeAttribute('disabled');
+				return;
+			}
+			start.setAttribute('disabled', 'disabled');
+		});
 	}
 };
+appData.checkSalaryAmount();
 expensesPlus.addEventListener('click', appData.addExpensesBlock);
 incomePlus.addEventListener('click', appData.addIncomeBlock);
 start.addEventListener('click', appData.start);
+periodSelect.addEventListener('input', appData.getPeriodAmount);
