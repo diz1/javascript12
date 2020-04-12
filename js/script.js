@@ -23,6 +23,7 @@ let start = document.getElementById('start'),
 	targetAmount = document.querySelector('.target-amount'),
 	additionalExpensesItem = document.querySelector('.additional_expenses-item');
 
+
 let isNumber = n => {
 	return !isNaN(parseFloat(n)) && isFinite(n);
 };
@@ -64,16 +65,22 @@ let appData = {
 	},
 	addExpensesBlock: () => {
 		let cloneExpensesItem = expensesItems[0].cloneNode(true);
+		cloneExpensesItem.children[0].value = '';
+		cloneExpensesItem.children[1].value = '';
 		expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesPlus);
 		expensesItems = document.querySelectorAll('.expenses-items');
+		appData.startCheck();
 		if (expensesItems.length === 3) {
 			expensesPlus.style.display = 'none';
 		}
 	},
 	addIncomeBlock: () => {
 		let cloneIncomeItem = incomeItems[0].cloneNode(true);
+		cloneIncomeItem.children[0].value = '';
+		cloneIncomeItem.children[1].value = '';
 		incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomePlus);
 		incomeItems = document.querySelectorAll('.income-items');
+		appData.startCheck();
 		if (incomeItems.length === 3) {
 			incomePlus.style.display = 'none';
 		}
@@ -173,8 +180,6 @@ let appData = {
 			incomePeriodValue.value = appData.calcSavedMoney();
 		});
 
-
-
 		// if (appData.getTargetMonth() > 0) {
 		// 	return (`Цель в ${appData.mission} руб. будет достигнута через ${appData.getTargetMonth()}
 		// 	месяц${appData.getEnding()}`);
@@ -204,8 +209,26 @@ let appData = {
 			}
 			start.setAttribute('disabled', 'disabled');
 		});
+	},
+	checkNamesValue: e => {
+		e.target.value = e.target.value.replace(/[^а-яА-Я\,\.\s]/g, '');
+	},
+	checkSumValue: e => {
+		e.target.value = e.target.value.replace(/[\D]/g, '');
+	},
+	startCheck: () => {
+		let inputNames = document.querySelectorAll('input[placeholder="Наименование"]'),
+			inputSum = document.querySelectorAll('input[placeholder="Сумма"]');
+		inputNames.forEach(item => {
+			item.addEventListener('input', appData.checkNamesValue);
+		});
+		inputSum.forEach(item => {
+			item.addEventListener('input', appData.checkSumValue);
+		});
 	}
 };
+
+appData.startCheck();
 appData.checkSalaryAmount();
 expensesPlus.addEventListener('click', appData.addExpensesBlock);
 incomePlus.addEventListener('click', appData.addIncomeBlock);
