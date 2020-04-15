@@ -60,9 +60,7 @@ class AppData {
 
 		this.budget = +salaryAmount.value;
 		this.checkSalaryAmount();
-		this.getExpenses();
-		this.getIncome();
-		// this.getExpInc();
+		this.getExpInc();
 		this.getExpensesMonth();
 		this.getTargetMonth();
 		// this.getInfoDeposit();
@@ -105,48 +103,24 @@ class AppData {
 		}
 	}
 
-	getExpenses() {
-		expensesItems.forEach(item => {
-			let itemExpenses = item.querySelector('.expenses-title').value;
-			let cashExpenses = item.querySelector('.expenses-amount').value;
-			if (itemExpenses !== '' && cashExpenses !== '') {
-				this.expenses[itemExpenses] = +cashExpenses;
-			}
-		});
-	}
+	getExpInc() {
+		const count = item => {
+			const startStr = item.className.split(`-`)[0];
+			const itemTitle = item.querySelector(`.${startStr}-title`).value;
+			const itemAmount = item.querySelector(`.${startStr}-amount`).value;
 
-	getIncome() {
-		incomeItems.forEach(item => {
-			let itemIncome = item.querySelector('.income-title').value;
-			let cashIncome = item.querySelector('.income-amount').value;
-			if (itemIncome !== '' && cashIncome !== '') {
-				this.income[itemIncome] = +cashIncome;
+			if (itemTitle !== '' && itemAmount !== '') {
+				this[startStr][itemTitle] = +itemAmount;
 			}
-		});
+		};
+
+		incomeItems.forEach(count);
+		expensesItems.forEach(count);
 
 		for (let key in this.income) {
-			this.incomeMonth += this.income[key];
+			this.incomeMonth += +this.income[key];
 		}
 	}
-
-	// getExpInc() {
-	// 	const count = item => {
-	// 		const startStr = item.className.split(`-`)[0];
-	// 		const itemTitle = item.querySelector(`.${startStr}-title`).value;
-	// 		const itemAmount = item.querySelector(`.${startStr}-amount`).value;
-	//
-	// 		if (itemTitle !== '' && itemAmount !== '') {
-	// 			this[startStr][itemTitle] = +itemAmount;
-	// 		}
-	// 	};
-	//
-	// 	incomeItems.forEach(count);
-	// 	expensesItems.forEach(count);
-	//
-	// 	for (let key in this.income) {
-	// 		this.incomeMonth += +this.income[key];
-	// 	}
-	// }
 
 	getAddExpenses() {
 		let addExpenses = additionalExpensesItem.value.split(',');
@@ -285,9 +259,7 @@ class AppData {
 		expensesPlus.style.display = 'block';
 
 		this.startCheck();
-		this.getExpenses();
-		this.getIncome();
-		// this.getExpInc();
+		this.getExpInc();
 		this.getExpensesMonth();
 		this.getTargetMonth();
 		// this.getInfoDeposit();
