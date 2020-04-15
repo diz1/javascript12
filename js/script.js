@@ -79,27 +79,53 @@ class AppData {
 		periodAmount.textContent = periodSelect.value;
 	}
 
-	addExpensesBlock() {
-		let cloneExpensesItem = expensesItems[0].cloneNode(true);
-		cloneExpensesItem.children[0].value = '';
-		cloneExpensesItem.children[1].value = '';
-		expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesPlus);
-		expensesItems = document.querySelectorAll('.expenses-items');
-		this.startCheck();
-		if (expensesItems.length === 3) {
-			expensesPlus.style.display = 'none';
-		}
-	}
+	// addExpensesBlock() {
+	// 	let cloneExpensesItem = expensesItems[0].cloneNode(true);
+	// 	cloneExpensesItem.children[0].value = '';
+	// 	cloneExpensesItem.children[1].value = '';
+	// 	expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesPlus);
+	// 	expensesItems = document.querySelectorAll('.expenses-items');
+	// 	this.startCheck();
+	// 	if (expensesItems.length === 3) {
+	// 		expensesPlus.style.display = 'none';
+	// 	}
+	// }
+	//
+	// addIncomeBlock() {
+	// 	let cloneIncomeItem = incomeItems[0].cloneNode(true);
+	// 	cloneIncomeItem.children[0].value = '';
+	// 	cloneIncomeItem.children[1].value = '';
+	// 	incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomePlus);
+	// 	incomeItems = document.querySelectorAll('.income-items');
+	// 	this.startCheck();
+	// 	if (incomeItems.length === 3) {
+	// 		incomePlus.style.display = 'none';
+	// 	}
+	// }
 
-	addIncomeBlock() {
-		let cloneIncomeItem = incomeItems[0].cloneNode(true);
-		cloneIncomeItem.children[0].value = '';
-		cloneIncomeItem.children[1].value = '';
-		incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomePlus);
-		incomeItems = document.querySelectorAll('.income-items');
-		this.startCheck();
-		if (incomeItems.length === 3) {
-			incomePlus.style.display = 'none';
+	addBlock (e, items, btn) {
+		if (e.target === expensesPlus) {
+			let cloneItem = expensesItems[0].cloneNode(true);
+			cloneItem.children[0].value = '';
+			cloneItem.children[1].value = '';
+			const startStr = expensesItems[0].className.split(`-`)[0];
+			expensesItems[0].parentNode.insertBefore(cloneItem, e.target);
+			expensesItems = document.querySelectorAll(`.${startStr}-items`);
+			this.startCheck();
+			if (expensesItems.length === 3) {
+				e.target.style.display = 'none';
+			}
+		} else if (e.target === incomePlus) {
+			let cloneItem = incomeItems[0].cloneNode(true);
+			cloneItem.children[0].value = '';
+			cloneItem.children[1].value = '';
+			const startStr = incomeItems[0].className.split(`-`)[0];
+			incomeItems[0].parentNode.insertBefore(cloneItem, e.target);
+			incomeItems = document.querySelectorAll(`.${startStr}-items`);
+			this.startCheck();
+			if (incomeItems.length === 3) {
+				e.target.style.display = 'none';
+			}
 		}
 	}
 
@@ -295,8 +321,8 @@ class AppData {
 	}
 
 	eventsListeners() {
-		expensesPlus.addEventListener('click', this.addExpensesBlock.bind(this));
-		incomePlus.addEventListener('click', this.addIncomeBlock.bind(this));
+		expensesPlus.addEventListener('click', this.addBlock.bind(this));
+		incomePlus.addEventListener('click', this.addBlock.bind(this));
 		start.addEventListener('click', this.start.bind(this));
 		cancel.addEventListener('click', this.reset.bind(this));
 		periodSelect.addEventListener('input', this.getPeriodAmount);
